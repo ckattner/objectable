@@ -24,20 +24,12 @@ module Objectable
       freeze
     end
 
-    def get(object, expression, traverse: true)
-      if traverse
-        traverse(object, key_path(expression))
-      else
-        interface.get(object, expression)
-      end
+    def get(object, expression)
+      traverse(object, key_path(expression))
     end
 
-    def set(object, expression, value, traverse: true)
-      if traverse
-        build_up(object, key_path(expression), value)
-      else
-        interface.set(object, expression, value)
-      end
+    def set(object, expression, value)
+      build_up(object, key_path(expression), value)
     end
 
     def ==(other)
@@ -86,10 +78,10 @@ module Objectable
 
         interface.set(pointer, last_key, value)
       end
+    end
 
-      def build_and_set(pointer, key)
-        interface.get(interface.set(pointer, key, pointer.class.new), key)
-      end
+    def build_and_set(pointer, key)
+      interface.get(interface.set(pointer, key, pointer.class.new), key)
     end
   end
 end

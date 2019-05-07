@@ -22,75 +22,38 @@ describe Objectable::Resolver do
       }
     end
 
-    context 'with traversal' do
-      describe '#get' do
-        it 'resolves correct value' do
-          expect(subject.get(input, :id)).to  eq(input['id'])
-          expect(subject.get(input, 'id')).to eq(input['id'])
-        end
-
-        it 'resolves correct value for nested objects' do
-          expect(subject.get(input, 'demographics.first')).to eq(input.dig(:demographics, 'first'))
-        end
+    describe '#get' do
+      it 'resolves correct value' do
+        expect(subject.get(input, :id)).to  eq(input['id'])
+        expect(subject.get(input, 'id')).to eq(input['id'])
       end
 
-      describe '#set' do
-        it 'sets correct value' do
-          subject.set(input, :active, true)
-          expect(subject.get(input, :active)).to  be true
-          expect(subject.get(input, 'active')).to be true
-
-          subject.set(input, 'super_power', :thunder)
-          expect(subject.get(input, 'super_power')).to  eq(:thunder)
-          expect(subject.get(input, :super_power)).to   eq(:thunder)
-        end
-
-        it 'sets correct value for nested objects' do
-          subject.set(input, :'statuses.active', true)
-          expect(subject.get(input, 'statuses.active')).to  be true
-          expect(subject.get(input, :'statuses.active')).to be true
-
-          subject.set(input, 'powers.super_power', :thunder)
-          expect(subject.get(input, 'powers.super_power')).to   eq(:thunder)
-          expect(subject.get(input, :'powers.super_power')).to  eq(:thunder)
-
-          expect(subject.get(input, 'powers')).to eq('super_power' => :thunder)
-        end
+      it 'resolves correct value for nested objects' do
+        expect(subject.get(input, 'demographics.first')).to eq(input.dig(:demographics, 'first'))
       end
     end
 
-    context 'without traversal' do
-      describe '#get' do
-        it 'resolves correct value' do
-          expect(subject.get(input, :id, traverse: false)).to  eq(input['id'])
-          expect(subject.get(input, 'id', traverse: false)).to eq(input['id'])
-        end
+    describe '#set' do
+      it 'sets correct value' do
+        subject.set(input, :active, true)
+        expect(subject.get(input, :active)).to  be true
+        expect(subject.get(input, 'active')).to be true
 
-        it 'resolves correct value for nested objects' do
-          expect(subject.get(input, 'demographics.first', traverse: false)).to be nil
-        end
+        subject.set(input, 'super_power', :thunder)
+        expect(subject.get(input, 'super_power')).to  eq(:thunder)
+        expect(subject.get(input, :super_power)).to   eq(:thunder)
       end
 
-      describe '#set' do
-        it 'sets correct value' do
-          subject.set(input, :active, true)
-          expect(subject.get(input, :active, traverse: false)).to  be true
-          expect(subject.get(input, 'active', traverse: false)).to be true
+      it 'sets correct value for nested objects' do
+        subject.set(input, :'statuses.active', true)
+        expect(subject.get(input, 'statuses.active')).to  be true
+        expect(subject.get(input, :'statuses.active')).to be true
 
-          subject.set(input, 'super_power', :thunder)
-          expect(subject.get(input, 'super_power', traverse: false)).to  eq(:thunder)
-          expect(subject.get(input, :super_power, traverse: false)).to   eq(:thunder)
-        end
+        subject.set(input, 'powers.super_power', :thunder)
+        expect(subject.get(input, 'powers.super_power')).to   eq(:thunder)
+        expect(subject.get(input, :'powers.super_power')).to  eq(:thunder)
 
-        it 'sets correct value for nested objects' do
-          subject.set(input, :'statuses.active', true, traverse: false)
-          expect(subject.get(input, 'statuses.active', traverse: false)).to  be true
-          expect(subject.get(input, :'statuses.active', traverse: false)).to be true
-
-          subject.set(input, 'powers.super_power', :thunder, traverse: false)
-          expect(subject.get(input, 'powers.super_power', traverse: false)).to   eq(:thunder)
-          expect(subject.get(input, :'powers.super_power', traverse: false)).to  eq(:thunder)
-        end
+        expect(subject.get(input, 'powers')).to eq('super_power' => :thunder)
       end
     end
   end
@@ -105,87 +68,48 @@ describe Objectable::Resolver do
       )
     end
 
-    context 'with traversal' do
-      describe '#get' do
-        it 'resolves correct value' do
-          expect(subject.get(input, :id)).to  eq(input.id)
-          expect(subject.get(input, 'id')).to eq(input.id)
-        end
-
-        it 'resolves correct value for nested objects' do
-          expect(subject.get(input, 'demographics.first')).to eq(input.demographics.first)
-        end
+    describe '#get' do
+      it 'resolves correct value' do
+        expect(subject.get(input, :id)).to  eq(input.id)
+        expect(subject.get(input, 'id')).to eq(input.id)
       end
 
-      describe '#set' do
-        it 'sets correct value' do
-          subject.set(input, :active, true)
-          expect(subject.get(input, :active)).to  be true
-          expect(subject.get(input, 'active')).to be true
-
-          subject.set(input, 'super_power', :thunder)
-          expect(subject.get(input, 'super_power')).to  eq(:thunder)
-          expect(subject.get(input, :super_power)).to   eq(:thunder)
-        end
-
-        it 'sets overrides existing value' do
-          subject.set(input, :id, 999)
-          expect(subject.get(input, :id)).to  eq(999)
-          expect(subject.get(input, 'id')).to eq(999)
-
-          subject.set(input, 'id', 123)
-          expect(subject.get(input, :id)).to  eq(123)
-          expect(subject.get(input, 'id')).to eq(123)
-        end
-
-        it 'set correct value for nested objects' do
-          subject.set(input, :'statuses.active', true)
-          expect(subject.get(input, 'statuses.active')).to  be true
-          expect(subject.get(input, :'statuses.active')).to be true
-
-          subject.set(input, 'powers.super_power', :thunder)
-          expect(subject.get(input, 'powers.super_power')).to   eq(:thunder)
-          expect(subject.get(input, :'powers.super_power')).to  eq(:thunder)
-
-          expect(subject.get(input, 'powers')).to eq(OpenStruct.new('super_power' => :thunder))
-        end
-      end
-    end
-
-    context 'without traversal' do
-      describe '#get' do
-        it 'resolves correct value' do
-          expect(subject.get(input, :id, traverse: false)).to  eq(input.id)
-          expect(subject.get(input, 'id', traverse: false)).to eq(input.id)
-        end
-
-        it 'resolves correct value for nested objects' do
-          expect(subject.get(input, 'demographics.first', traverse: false)).to be nil
-        end
+      it 'resolves correct value for nested objects' do
+        expect(subject.get(input, 'demographics.first')).to eq(input.demographics.first)
       end
     end
 
     describe '#set' do
       it 'sets correct value' do
-        subject.set(input, :active, true, traverse: false)
-        expect(subject.get(input, :active, traverse: false)).to  be true
-        expect(subject.get(input, 'active', traverse: false)).to be true
+        subject.set(input, :active, true)
+        expect(subject.get(input, :active)).to  be true
+        expect(subject.get(input, 'active')).to be true
 
-        subject.set(input, 'super_power', :thunder, traverse: false)
-        expect(subject.get(input, 'super_power', traverse: false)).to  eq(:thunder)
-        expect(subject.get(input, :super_power, traverse: false)).to   eq(:thunder)
+        subject.set(input, 'super_power', :thunder)
+        expect(subject.get(input, 'super_power')).to  eq(:thunder)
+        expect(subject.get(input, :super_power)).to   eq(:thunder)
+      end
+
+      it 'sets overrides existing value' do
+        subject.set(input, :id, 999)
+        expect(subject.get(input, :id)).to  eq(999)
+        expect(subject.get(input, 'id')).to eq(999)
+
+        subject.set(input, 'id', 123)
+        expect(subject.get(input, :id)).to  eq(123)
+        expect(subject.get(input, 'id')).to eq(123)
       end
 
       it 'set correct value for nested objects' do
-        subject.set(input, :'statuses.active', true, traverse: false)
-        expect(subject.get(input, 'statuses.active', traverse: false)).to  be true
-        expect(subject.get(input, :'statuses.active', traverse: false)).to be true
+        subject.set(input, :'statuses.active', true)
+        expect(subject.get(input, 'statuses.active')).to  be true
+        expect(subject.get(input, :'statuses.active')).to be true
 
-        subject.set(input, 'powers.super_power', :thunder, traverse: false)
-        expect(subject.get(input, 'powers.super_power', traverse: false)).to   eq(:thunder)
-        expect(subject.get(input, :'powers.super_power', traverse: false)).to  eq(:thunder)
+        subject.set(input, 'powers.super_power', :thunder)
+        expect(subject.get(input, 'powers.super_power')).to   eq(:thunder)
+        expect(subject.get(input, :'powers.super_power')).to  eq(:thunder)
 
-        expect(subject.get(input, 'powers', traverse: false)).to be nil
+        expect(subject.get(input, 'powers')).to eq(OpenStruct.new('super_power' => :thunder))
       end
     end
   end
