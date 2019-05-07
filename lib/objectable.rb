@@ -7,6 +7,14 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+require_relative 'objectable/resolver'
+
 # Top-level API
 module Objectable
+  class << self
+    # Really just syntactic sugar that proxies a new Resolver instance creation.
+    def resolver(*args)
+      Resolver.new(*args)
+    end
+  end
 end

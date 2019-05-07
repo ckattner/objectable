@@ -10,7 +10,21 @@
 require './spec/spec_helper'
 
 describe Objectable do
-  it 'should pass' do
-    expect(1).to eq(1)
+  describe '#resolver' do
+    specify 'with no arguments' do
+      resolver = described_class.resolver
+
+      expect(resolver).to be_a(Objectable::Resolver)
+      expect(resolver.separator).to eq('.')
+    end
+
+    specify 'with arguments' do
+      resolver1 = described_class.resolver(separator: '$')
+      resolver2 = described_class.resolver(separator: '$')
+
+      expect(resolver1).to eq(resolver2)
+      expect(resolver1.separator).to eq('$')
+      expect(resolver2.separator).to eq('$')
+    end
   end
 end
