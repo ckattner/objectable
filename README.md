@@ -34,13 +34,13 @@ bundle add objectable
 Let's define a set of objects built using different constructs but all essentially represent the same graphs:
 
 ```ruby
-class Employee < Struct.new(:id, :demographics); end
-class Demographics < Struct.new(:first); end
+Employee      = Struct.new(:id, :demographics)
+Demographics  = Struct.new(:first)
 
 symbol_based_hash = { id: 1, demographics: { first: 'Matt' } }
 string_based_hash = { 'id' => 1, 'demographics' => { 'first' => 'Matt' } }
-open_struct = OpenStruct.new(id: 1, demographics: OpenStruct.new(first: 'Matt'))
-object = Employee.new(1, Demographics.new('Matt'))
+open_struct       = OpenStruct.new(id: 1, demographics: OpenStruct.new(first: 'Matt'))
+object            = Employee.new(1, Demographics.new('Matt'))
 ```
 
 ### Getting Values
@@ -87,8 +87,8 @@ resolver.set(string_based_hash, :id, 999)
 resolver.set(string_based_hash, 'id', 999)
 resolver.set(open_struct, :id, 999)
 resolver.set(open_struct, 'id', 999)
-resolver.set(object, :id, 999
-resolver.set(object, 'id', 999
+resolver.set(object, :id, 999)
+resolver.set(object, 'id', 999)
 
 # All calls will set the object's respective id attribute to: Nick
 resolver.set(symbol_based_hash, :'demographics.first', 'Nick')
